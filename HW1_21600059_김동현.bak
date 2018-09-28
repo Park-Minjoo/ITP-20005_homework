@@ -1,0 +1,14 @@
+#lang plai
+
+;Problem 1:
+;Solved by myself: Y
+;Time taken: about 10 mins
+;[contract] mile->km: number->number
+;[purpose] To convert mile to km
+;[tests] (test (mile->km 1)1.6)
+;        (test (mile->km 2)3.2)
+(define (mile->km mile)
+  (* 1.6 mile))
+
+(test (mile->km 1)1.6)
+(test (mile->km 2)3.2)

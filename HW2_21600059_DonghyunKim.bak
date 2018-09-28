@@ -1,0 +1,34 @@
+#lang plai
+
+(define-type AE
+  [num (n number?)]
+  [add (lhs AE?)
+       (rhs AE?)]
+  [sub (lhs AE?)
+       (rhs AE?)])
+
+;; [contract]
+;; [purpose]
+;(define (parse sexp)
+;	(cond
+;		[(number? sexp) (num sexp)]
+;		[(and (= 3 (length sexp))
+;			   (eq? (first sexp) '+))
+;		 (add (parse (second sexp))
+;			  (parse (third sexp)))]
+;		[(and (= 3 (length sexp))
+;			   (eq? (first sexp) '-))
+;		 (sub (parse (second sexp))
+;			   (parse (third sexp)))]
+;		[else (error 'parse "bad syntax: ~a" sexp)]))
+
+(define (parse sexp)
+	(match sexp
+          [number (num sexp)]
+          [(list a b) (add (parse a) (parse b))]
+          ))
+
+
+;; [tests]
+(test (parse '3) (num 3))
+(test (parse '{3 4}) (add (num 3) (num 4)))
