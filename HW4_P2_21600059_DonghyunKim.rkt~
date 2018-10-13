@@ -36,16 +36,14 @@
    [else 	              (error 'parse "bad syntax: ~a" sexp)]))
 
 
-;[Contract] (num num -> num) -> (FWAE FWAE -> FWAE)
-;[Purpose] To claculate add and sub more efficiently
+
 (define (num-op op)
      (lambda (x y)
           (num (op (num-n x) (num-n y)))))
 (define num+ (num-op +))
 (define num- (num-op -))
 
-;[Contract] subst: FWAE symbol number -> FWAE
-;[Purpose] to support interp
+
 (define (subst exp idtf val)
      (type-case FWAE exp
        [num (n)	exp]
@@ -60,8 +58,7 @@
        [app (f arg) (app (subst f idtf val) (subst arg idtf val))]
        [fun (id body) (if (equal? idtf id) exp (fun id (subst body idtf val)))]))
 
-;[Contract] interp: FWAE-> FWAE
-;[Purpose] To get result
+;interp: FWAE -> FWAE
 (define (interp fwae)
      (type-case FWAE fwae
           [num   (n)        fwae]
