@@ -12,18 +12,7 @@
 ;Solved by myself: Y
 ;[Contract] parse: sexp -> FWAE
 ;[Purpose] to convert s-exp to FWAE
-;[time taken]: around 3 hours
-;[Test] 1 ~ 10
-;(test (interp (parse 3)) (num 3))
-;(test (interp (parse '{fun {x} {+ x 1}})) (fun 'x (add (id 'x) (num 1))))
-;(test/exn (interp (parse 'x)) "interp: free identifier")
-;(test (interp (parse '{+ 4 3})) (num 7))
-;(test (interp (parse '{with {x 7} {- x 2}})) (num 5))
-;(test (interp (parse '{with {x 10} {{fun {y} {+ y 1}} x}})) (num 11))
-;(test (interp (parse '{with {x {- 20 5}} {{fun {y} {+ y 1}} x}})) (num 16))
-;(test (interp (parse '{with {f {fun {x} {+ x x}}} {f 10}})) (num 20))
-;(test (interp (parse '{with {f {fun {x} {+ x x}}} {f {- 10 5}}})) (num 10))
-;(test (interp (parse '{with {f {fun {x} {+ x x}}} {+ 4 {f {- 10 5}}}})) (num 14))
+;time taken: around 3 hours
 (define (parse sexp)
  (match sexp
    [(? number?)		      (num sexp)]
@@ -74,13 +63,13 @@
 
 
 ;[Test] 1 ~ 10
-(test (interp (parse 3)) (num 3))
-(test (interp (parse '{fun {x} {+ x 1}})) (fun 'x (add (id 'x) (num 1))))
-(test/exn (interp (parse 'x)) "interp: free identifier")
-(test (interp (parse '{+ 4 3})) (num 7))
-(test (interp (parse '{with {x 7} {- x 2}})) (num 5))
-(test (interp (parse '{with {x 10} {{fun {y} {+ y 1}} x}})) (num 11))
-(test (interp (parse '{with {x {- 20 5}} {{fun {y} {+ y 1}} x}})) (num 16))
-(test (interp (parse '{with {f {fun {x} {+ x x}}} {f 10}})) (num 20))
-(test (interp (parse '{with {f {fun {x} {+ x x}}} {f {- 10 5}}})) (num 10))
-(test (interp (parse '{with {f {fun {x} {+ x x}}} {+ 4 {f {- 10 5}}}})) (num 14))
+;(test (interp (parse 3)) (num 3))
+;(test (interp (parse '{fun {x} {+ x 1}})) (fun 'x (add (id 'x) (num 1))))
+;(test/exn (interp (parse 'x)) "interp: free identifier")
+;(test (interp (parse '{+ 4 3})) (num 7))
+;(test (interp (parse '{with {x 7} {- x 2}})) (num 5))
+;(test (interp (parse '{with {x 10} {{fun {y} {+ y 1}} x}})) (num 11))
+;(test (interp (parse '{with {x {- 20 5}} {{fun {y} {+ y 1}} x}})) (num 16))
+;(test (interp (parse '{with {f {fun {x} {+ x x}}} {f 10}})) (num 20))
+;(test (interp (parse '{with {f {fun {x} {+ x x}}} {f {- 10 5}}})) (num 10))
+;(test (interp (parse '{with {f {fun {x} {+ x x}}} {+ 4 {f {- 10 5}}}})) (num 14))
