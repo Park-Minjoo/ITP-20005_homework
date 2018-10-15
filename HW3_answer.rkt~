@@ -38,7 +38,7 @@
 		[with (i v e) (sort (remove-duplicates (append (remove* (list i) (free-ids e)) (free-ids v)))symbol<?)]
 		[id (s)		(list s)]))
 
-(free-ids (with 'x (num 5) (add (id 'x) (with 'y (id 'z) (id 'x)))))
+
 (test (free-ids (with 'x (num 3) (add (id 'x) (sub (num 3) (id 'x))))) '())
 (test (free-ids (with 'x (num 3) (sub (id 'a) (add (num 4) (id 'x))))) '(a))
 (test (free-ids (with 'x (num 3) (sub (id 'b) (sub (id 'a) (id 'x))))) '(a b))

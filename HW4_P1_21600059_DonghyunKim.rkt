@@ -55,7 +55,7 @@
                               (if (symbol=? i idtf) e
                                   (subst e idtf val)))]
        [id (name) (cond
-                    [(equal? name idtf ) val]
+                    [(equal? name idtf) val]
                     [else exp])]
        [app (f arg) (app (subst f idtf val) (subst arg idtf val))]
        [fun (id body) (if (equal? idtf id) exp (fun id (subst body idtf val)))]))
@@ -82,8 +82,10 @@
 (test/exn (interp (parse 'x)) "interp: free identifier")
 (test (interp (parse '{+ 4 3})) (num 7))
 (test (interp (parse '{with {x 7} {- x 2}})) (num 5))
-(test (interp (parse '{with {x 10} {{fun {y} {+ y 1}} x}})) (num 11))
-(test (interp (parse '{with {x {- 20 5}} {{fun {y} {+ y 1}} x}})) (num 16))
+(test (interp (parse '{with {x 10} {{fun {y} {+ y x}} x}})) (num 20))
+(test (interp (parse '{with {x {- 20 5}} {{fun {y} {+ y x}} {+ x 2}}})) (num 32))
 (test (interp (parse '{with {f {fun {x} {+ x x}}} {f 10}})) (num 20))
 (test (interp (parse '{with {f {fun {x} {+ x x}}} {f {- 10 5}}})) (num 10))
 (test (interp (parse '{with {f {fun {x} {+ x x}}} {+ 4 {f {- 10 5}}}})) (num 14))
+(test (parse '{{fun {x} {+ x 1}} 10})
+                    (app (fun 'x (add (id 'x) (num 1))) (num 10)))
