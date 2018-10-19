@@ -44,7 +44,7 @@
 (define num+ (num-op +))
 (define num- (num-op -))
 
-;[Contract] subst: FWAE symbol number -> FWAE
+;[Contract] subst: FWAE symbol FWAE -> FWAE
 ;[Purpose] to support interp
 (define (subst exp idtf val)
      (type-case FWAE exp
