@@ -63,7 +63,7 @@
 (define num- (num-op -))
 
 ; lookup: DefrdSub ds->LFAE-Value
-; purpose: ...
+; purpose: 
 (define (lookup name ds)
   (type-case DefrdSub ds
     [mtSub ()           (error 'lookup "free identifier")]

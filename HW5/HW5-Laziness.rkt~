@@ -1,6 +1,6 @@
 #lang plai
 
-; Solve by myself: Y
+; Solve by myself: ...
 ; Time taken: ...
 
 ; Type definition for abstract syntax tree of LFAE
@@ -62,7 +62,7 @@
 (define num+ (num-op +))
 (define num- (num-op -))
 
-; lookup: DefrdSub ds->LFAE-Value
+; lookup: ...
 ; purpose: ...
 (define (lookup name ds)
   (type-case DefrdSub ds
@@ -71,8 +71,8 @@
                                 v             ;; if v is exprV (num ==> interp it
                                 (lookup name saved))]))
 
-; interp: LFAE->LFAE-Value
-; purpose: to get LFAE-Value from LFAE
+; interp: ...
+; purpose: ...
 (define (interp lfae ds)
   (type-case LFAE lfae
      [num (n)      (numV n)]
@@ -86,8 +86,8 @@
                            (aSub (closureV-param f-val)
                                  a-val
                                  (closureV-ds f-val))))]))
-; run: sexp->LFAE-Value
-; purpose: to call parse and interp in one queue
+; run: ...
+; purpose: ...
 (define (run sexp ds)
      (interp (parse sexp) ds))
 
