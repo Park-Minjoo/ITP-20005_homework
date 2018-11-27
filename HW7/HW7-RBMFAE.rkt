@@ -21,7 +21,7 @@
   
         
 ; parse : sexp -> RBMFAE
-; (3) purpose: ...
+; (3) purpose: to convert sexp to RBMFAE
 (define (parse sexp)
    (match sexp
         [(? number?)                (num sexp)]
@@ -46,8 +46,8 @@
   [refclosV  (param symbol?) (body RBMFAE?) (ds DefrdSub?)]
   [boxV      (address integer?)])
 
-; (4) num-op: ...
-; (5) purpose: ...
+; (4) num-op: operators for artithmatic computation -> function for artithmatic computation
+; (5) purpose: to get a function for arithmatic computation.
 (define (num-op op)
      (lambda (x y)
           (numV (op (numV-n x) (numV-n y)))))
@@ -69,7 +69,7 @@
   [v*s (value RBMFAE-Value?) (store Store?)])
 
 ; lookup: symbol DefrdSub -> address
-; (6) purpose: ...
+; (6) purpose: to find out matching address of given 'symbol' argument
 (define (lookup name ds)
   (type-case DefrdSub ds
     [mtSub ()           (error 'lookup "free identifier")]
@@ -77,8 +77,8 @@
                                 adr
                                 (lookup name saved))]))
 
-; (7) store-lookup: ...
-; (8) purpose: ...
+; (7) store-lookup: address Store -> RBMFAE-Value
+; (8) purpose: to find out matching RBMFAE-Value of given 'address' argument
 (define (store-lookup address sto)
   (type-case Store sto
     [mtSto ()           (error 'store-lookup "No value at address")]
@@ -88,20 +88,20 @@
                     (store-lookup address rest-store))]))
 
 ; malloc: Store -> Integer
-; (9) purpose: ...
+; (9) purpose: to allocate memory for a new box.
 (define (malloc st)
   (+ 1 (max-address st)))
 
-; (10) max-address: ...
-; (11) purpose: ...
+; (10) max-address: Store -> Integer
+; (11) purpose: to get maximum number from addresses in 'st(= Store type)' argument
 (define (max-address st)
   (type-case Store st
     [mtSto () 0]
     [aSto (n v st)
           (max n (max-address st))]))
 
-; (12) interp: 
-; (13) purpose: ...
+; (12) interp: RBMFAE DefrdSub Store -> Value*Store
+; (13) purpose: to get Value*Store from RBNFAE
 (define (interp rbmfae ds st)
   (type-case RBMFAE rbmfae
     [num    (n)    (v*s (numV n) st)]
@@ -149,7 +149,7 @@
 ;interp-two: RBMFAE RBMFAE DefrdSub Store
 ;            (Value Value Store -> Value*Store)
 ;            -> Value*Store
-; (14) purpose: 
+; (14) purpose: to get Value*Store from two RBMFAEs through 'handle'(= anonymous fuction)
 (define (interp-two expr1 expr2 ds st handle)
   (type-case Value*Store (interp expr1 ds st)
     [v*s (val1 st2)
