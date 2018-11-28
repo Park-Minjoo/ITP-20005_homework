@@ -205,9 +205,3 @@
         (refun 'y (app (fun 'z (seqn (setvar 'x (id 'y)) (setvar 'y (id 'z)))) (id 'x)))
         (mtSub))
        (mtSto)))))))))
-
-;(test (run '{rec {count {fun {n} {if0 n 0 {+ 1 {count {- n 1}}}}}}
-;                  {count 8}} (mtSub) (mtSto))
-;      (v*s (numV 8) (aSto 9 (numV 0) (aSto 8 (numV 1) (aSto 7 (numV 2) (aSto 6 (numV 3) (aSto 5 (numV 4) (aSto 4 (numV 5) (aSto 3 (numV 6) (aSto 2 (numV 7) (aSto 1 (numV 8) (mtSto)))))))))))
-;)
-
