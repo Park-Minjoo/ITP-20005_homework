@@ -126,5 +126,7 @@
 ; test case #2
 (test (run '{{fun {x} x} {+ 1 {{fun {y} 2} 1}}} (mtSub)) (numV 3))
 
+(test (run '{{fun {x} 0} {+ 1 {fun {y} 2}}} (mtSub)) (numV 0))
+
 ; run #3
 ;(run '{{fun {x} x} {+ 1 {fun {y} 2}}} (mtSub)) ;; numV-n: contract violation ... [The interp is terminated with an error]

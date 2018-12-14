@@ -1,7 +1,7 @@
 #lang plai
 
 ; Solve by myself: Y
-; Time taken: ...
+; Time taken: one and half hour
 
 ; Type definition for abstract syntax tree of LFAE
 (define-type LFAE
@@ -32,7 +32,7 @@
 ;(parse '{{fun {a} {+ 3 a}} 10})
 ;(parse '{+ 2 {fun {a} {+ 3 a}}})
 ;(test (parse '{{fun {x} {+ x 1}} 10})
-;                   (app (fun 'x (add (id 'x) (num 1))) (num 10)))
+;                  (app (fun 'x (add (id 'x) (num 1))) (num 10)))
 
 ; Type definition for deferred substitution
 (define-type DefrdSub
@@ -43,13 +43,18 @@
 (define-type LFAE-Value
   [numV       (n number?)]
   [closureV   (param symbol?) (body LFAE?) (ds DefrdSub?)]
-  [exprV      (expr LFAE?) (ds DefrdSub?)])
+  [exprV      (expr LFAE?) (ds DefrdSub?)
+              (value (box/c (or/c false LFAE-Value?)))])
 
-; strict: ...
-; purpose: ...
+; strict: LFAE-Value->LFAE-Value
+; purpose: to get proper type of LFAE-Value(if it is numV we want to get it as numV type)
 (define (strict v)
     (type-case LFAE-Value v
-        [exprV (expr ds) (strict (interp expr ds))]
+        [exprV (expr ds v-box) (if (not (unbox v-box))    ;box contains #f? Then evaluate expr as needed.
+                               (local [(define v (strict (interp expr ds)))]
+                                            (begin (set-box! v-box v)
+                                             v))          ;return v after evaluating it.
+                               (unbox v-box))]
         [else v]))
 
 
@@ -62,16 +67,16 @@
 (define num+ (num-op +))
 (define num- (num-op -))
 
-; lookup: DefrdSub ds->LFAE-Value
-; purpose: 
+; lookup: symbol DefrdSub->LFAE-Value
+; purpose: to find out proper(that want to know) LFAE-Value
 (define (lookup name ds)
   (type-case DefrdSub ds
     [mtSub ()           (error 'lookup "free identifier")]
     [aSub  (i v saved) (if(symbol=? i name)
-                                v             ;; if v is exprV (num ==> interp it
+                                (strict v)             ;; if v is exprV (num ==> interp it
                                 (lookup name saved))]))
 
-; interp: LFAE->LFAE-Value
+; interp: LFAE DefrdSub->LFAE-Value
 ; purpose: to get LFAE-Value from LFAE
 (define (interp lfae ds)
   (type-case LFAE lfae
@@ -81,7 +86,7 @@
      [id  (s)     (lookup s ds)]
      [fun (p b)  (closureV p b ds)]
      [app (f a)   (local [(define f-val (strict (interp f ds)))
-                          (define a-val (exprV a ds))]
+                          (define a-val (exprV a ds (box #f)))]
                    (interp (closureV-body f-val)
                            (aSub (closureV-param f-val)
                                  a-val
@@ -110,8 +115,8 @@
 (run '{{fun {x} x} 1} (mtSub))
 
 ; run #2
-; How many times is {- {+ 4 5} {+ 8 9}} computed in the interpreter? (              )
-; Why is the expression, {- {+ 4 5} {+ 8 9}}, computed several times? (                                          )
+; How many times is {- {+ 4 5} {+ 8 9}} computed in the interpreter? (4)
+; Why is the expression, {- {+ 4 5} {+ 8 9}}, computed several times? (because every time when we use x, we need to calculate that part)
 (run '{{fun {x} {+ {+ x x} {+ x x}}} {- {+ 4 5} {+ 8 9}}} {mtSub})
 
 
@@ -119,7 +124,7 @@
 (test (run '{{fun {x} x} 1} (mtSub)) (numV 1))
 
 ; test case #2
-(test (run '{{fun {x} x} {+ 1 {{fun {y} 2} 1}}} (mtSub)) (numV 6))
+(test (run '{{fun {x} x} {+ 1 {{fun {y} 2} 1}}} (mtSub)) (numV 3))
 
 ; run #3
-(run '{{fun {x} x} {+ 1 {fun {y} 2}}} (mtSub)) ;; numV-n: contract violation ... [The interp is terminated with an error]
+;(run '{{fun {x} x} {+ 1 {fun {y} 2}}} (mtSub)) ;; numV-n: contract violation ... [The interp is terminated with an error]

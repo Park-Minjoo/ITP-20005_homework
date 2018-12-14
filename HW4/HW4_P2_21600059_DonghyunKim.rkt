@@ -89,3 +89,5 @@
 
 (test (interp (parse '{with {y 10} {fun {x} {+ y x}}}) (mtSub)) (closureV 'x (add (id 'y) (id 'x)) (aSub 'y (numV 10) (mtSub))))
 (test (interp (app (fun 'x (app (fun 'f (app (fun 'x (app (id 'f) (num 4))) (num 5))) (fun 'y (add (id 'x) (id 'y))))) (num 3)) (mtSub)) (numV 7))
+
+;(test (interp (parse '{{fun {x} 0} {+ 1 {fun {y} 2}}}) (mtSub)) (numV 0))
