@@ -69,7 +69,7 @@
   [aBind (name : symbol) (type : Type) (rest : TypeEnv)])
 
 ; (3) parse-type: TE -> TYPE
-; (4) purpose: to give TE to match TYPE
+; (4) purpose: to give correspond TE with TYPE
 (define (parse-type te)
   (type-case TE te
     [boolTE () (boolT)]
